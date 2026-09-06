@@ -1,219 +1,870 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0f172a">
-    <meta name="description" content="Enterprise Warehouse Audit & Quality Management Portal">
-    <title>Audit Center</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome CDN for Professional Enterprise Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A0F1C">
+<meta name="description" content="NooN — Enterprise Warehouse Audit & Quality Management Portal">
+<title>NooN · Audit Center</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  :root{
+    --bg-deep:#0A0F1C;
+    --bg-mesh-1:#131B2E;
+    --bg-mesh-2:#0D1526;
+    --glass-surface:rgba(255,255,255,0.045);
+    --glass-surface-strong:rgba(255,255,255,0.075);
+    --glass-border:rgba(255,255,255,0.10);
+    --glass-border-strong:rgba(255,255,255,0.16);
+    --text-primary:#EDF1F7;
+    --text-secondary:#AEB8CC;
+    --text-muted:#6E7891;
+    --accent-amber:#F2A65A;
+    --accent-teal:#3FD8C2;
+    --accent-teal-glow:rgba(63,216,194,0.35);
+
+    --mod-outbound:#F2A65A;
+    --mod-inventory:#3FD8C2;
+    --mod-inbound:#6C8CFF;
+    --mod-afs:#F2617A;
+    --mod-fresh:#8CD867;
+    --mod-rtv:#C48CFF;
+
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --font-display:'Sora', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+
+  /* ===== Motion ===== */
+  @keyframes fadeSlideUp{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes auroraDrift{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(-2.5%,2%) scale(1.07);}
+  }
+  @keyframes dialRotate{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+  @keyframes softPulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.4;}
+  }
+  @keyframes clockGlow{
+    0%,100%{text-shadow:0 0 0 rgba(63,216,194,0);}
+    50%{text-shadow:0 0 18px rgba(63,216,194,0.25);}
+  }
+  @keyframes logoRing{
+    0%,100%{box-shadow:0 0 0 0 rgba(63,216,194,0.28);}
+    50%{box-shadow:0 0 0 7px rgba(63,216,194,0);}
+  }
+  @keyframes rippleOut{
+    to{transform:scale(2.2); opacity:0;}
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:var(--font-body);
+    color:var(--text-primary);
+    background:linear-gradient(180deg, var(--bg-mesh-1) 0%, var(--bg-deep) 55%, var(--bg-mesh-2) 100%);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size:64px 64px;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(ellipse at 30% 0%, black 0%, transparent 70%);
+  }
+
+  body::after{
+    content:'';
+    position:fixed;
+    inset:-10%;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(63,216,194,0.12), transparent 40%),
+      radial-gradient(circle at 88% 82%, rgba(242,166,90,0.10), transparent 45%);
+    pointer-events:none;
+    z-index:0;
+    animation:auroraDrift 22s ease-in-out infinite;
+    will-change:transform;
+  }
+
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+
+  :focus-visible{
+    outline:2px solid var(--accent-teal);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+
+  .glass{
+    background:var(--glass-surface);
+    backdrop-filter:blur(24px) saturate(150%);
+    -webkit-backdrop-filter:blur(24px) saturate(150%);
+    border:1px solid var(--glass-border);
+  }
+
+  /* ===== Layout ===== */
+  .app-container{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:272px 1fr;
+    min-height:100vh;
+  }
+
+  .sidebar-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(6,9,16,0.6);
+    backdrop-filter:blur(3px);
+    z-index:40;
+  }
+  .sidebar-overlay.show{display:block;}
+
+  /* ===== Sidebar ===== */
+  .sidebar{
+    background:var(--glass-surface);
+    backdrop-filter:blur(28px) saturate(150%);
+    -webkit-backdrop-filter:blur(28px) saturate(150%);
+    border-right:1px solid var(--glass-border);
+    display:flex;
+    flex-direction:column;
+    padding:28px 18px;
+    position:sticky;
+    top:0;
+    height:100vh;
+    z-index:50;
+  }
+
+  .sidebar-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:4px 10px 26px;
+    border-bottom:1px solid var(--glass-border);
+    margin-bottom:22px;
+  }
+
+  .noon-mark{
+    position:relative;
+    width:42px; height:42px;
+    flex-shrink:0;
+    border-radius:50%;
+    animation:logoRing 3.2s ease-in-out infinite;
+  }
+  .noon-mark svg{width:100%; height:100%; display:block;}
+  .noon-mark .dial-ring{
+    transform-origin:21px 21px;
+    animation:dialRotate 40s linear infinite;
+  }
+
+  .logo-text{display:flex; flex-direction:column; line-height:1.1;}
+  .logo-text .word{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:0.01em;
+    display:flex;
+    align-items:baseline;
+  }
+  .logo-text .word .o{
+    color:var(--accent-teal);
+  }
+  .logo-text .tag{
+    font-size:11px;
+    color:var(--text-muted);
+    margin-top:3px;
+    font-weight:500;
+  }
+
+  .sidebar-nav{flex:1; display:flex; flex-direction:column; overflow-y:auto;}
+
+  .nav-divider{
+    font-size:11.5px;
+    color:var(--text-muted);
+    font-weight:600;
+    padding:18px 12px 8px;
+    letter-spacing:0.02em;
+  }
+  .nav-divider:first-child{padding-top:4px;}
+
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border-radius:var(--radius-sm);
+    color:var(--text-secondary);
+    font-size:14.5px;
+    font-weight:500;
+    transition:background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    margin-bottom:2px;
+    animation:fadeSlideUp 0.45s ease both;
+    animation-delay:calc(var(--i, 0) * 55ms);
+  }
+  .nav-item i{width:18px; text-align:center; font-size:15px; color:var(--text-muted); transition:color 0.15s ease;}
+  .nav-item svg{width:18px; height:18px; color:var(--text-muted); transition:color 0.15s ease, transform 0.2s ease; flex-shrink:0;}
+  .nav-item:hover{background:var(--glass-surface-strong); color:var(--text-primary); transform:translateX(2px);}
+  .nav-item:hover i, .nav-item:hover svg{color:var(--accent-teal);}
+  .nav-item:hover svg{transform:scale(1.1);}
+  .nav-item.active{
+    background:linear-gradient(135deg, rgba(63,216,194,0.14), rgba(63,216,194,0.04));
+    color:var(--text-primary);
+    border:1px solid rgba(63,216,194,0.25);
+  }
+  .nav-item.active i, .nav-item.active svg{color:var(--accent-teal);}
+  .nav-item.disabled{opacity:0.4; cursor:not-allowed;}
+  .nav-item.disabled:hover{background:transparent; color:var(--text-secondary); transform:none;}
+  .nav-item.disabled:hover i{color:var(--text-muted);}
+
+  .sidebar-footer{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 12px;
+    margin-top:14px;
+    border-top:1px solid var(--glass-border);
+  }
+  .sidebar-footer i{color:var(--accent-amber); font-size:17px;}
+  .footer-info{display:flex; flex-direction:column; line-height:1.3;}
+  .wh-title{font-size:13.5px; font-weight:600; color:var(--text-primary);}
+  .wh-status{font-size:11.5px; color:var(--accent-teal); display:flex; align-items:center; gap:5px;}
+  .wh-status::before{
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--accent-teal);
+    box-shadow:0 0 8px var(--accent-teal-glow);
+    display:inline-block;
+  }
+
+  /* ===== Main ===== */
+  .main-content{padding:28px 36px 60px; position:relative;}
+
+  .top-header{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+    margin-bottom:26px;
+  }
+  .menu-btn{
+    display:none;
+    background:var(--glass-surface);
+    border:1px solid var(--glass-border);
+    color:var(--text-primary);
+    width:40px; height:40px;
+    border-radius:var(--radius-sm);
+    align-items:center;
+    justify-content:center;
+    font-size:16px;
+  }
+  .top-header{animation:fadeSlideUp 0.5s ease both;}
+  .header-titles{flex:1;}
+  .header-titles h1{
+    font-family:var(--font-display);
+    font-size:26px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin-bottom:6px;
+  }
+  .header-titles p{color:var(--text-secondary); font-size:14.5px;}
+
+  .pwa-install-btn{
+    display:flex; align-items:center; gap:8px;
+    background:var(--glass-surface-strong);
+    border:1px solid var(--glass-border-strong);
+    color:var(--text-primary);
+    padding:10px 16px;
+    border-radius:var(--radius-sm);
+    font-size:13.5px;
+    font-weight:600;
+    transition:background 0.15s ease, transform 0.15s ease;
+  }
+  .pwa-install-btn:hover{background:rgba(255,255,255,0.12); transform:translateY(-1px);}
+  .pwa-install-btn.hidden{display:none;}
+
+  /* ===== Ops Hero ===== */
+  .ops-hero{
+    border-radius:var(--radius-lg);
+    padding:30px 32px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+    position:relative;
+    overflow:hidden;
+    animation:fadeSlideUp 0.5s ease both;
+    animation-delay:0.55s;
+  }
+  .ops-hero::after{
+    content:'';
+    position:absolute;
+    top:-40%; right:-10%;
+    width:340px; height:340px;
+    background:radial-gradient(circle, rgba(63,216,194,0.16), transparent 70%);
+    pointer-events:none;
+  }
+
+  .ops-clock-block{position:relative; z-index:1;}
+  .ops-clock-label{
+    font-size:12px;
+    color:var(--text-muted);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .ops-clock{
+    font-family:var(--font-mono);
+    font-size:44px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:var(--text-primary);
+    line-height:1;
+    display:flex;
+    align-items:baseline;
+    gap:4px;
+    animation:clockGlow 3s ease-in-out infinite;
+  }
+  .ops-clock .ampm{font-size:16px; color:var(--accent-teal); font-weight:600; margin-left:4px;}
+  .ops-date{
+    font-family:var(--font-mono);
+    font-size:13.5px;
+    color:var(--text-secondary);
+    margin-top:8px;
+  }
+
+  .ops-shift-block{
+    position:relative; z-index:1;
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+  }
+  .ops-stat{min-width:110px;}
+  .ops-stat .label{font-size:11.5px; color:var(--text-muted); font-weight:600; margin-bottom:6px;}
+  .ops-stat .value{font-family:var(--font-display); font-size:18px; font-weight:700;}
+  .ops-stat .value.teal{color:var(--accent-teal);}
+  .ops-stat .value.amber{color:var(--accent-amber);}
+
+  /* ===== Status strip ===== */
+  .status-banner{
+    display:flex;
+    gap:14px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .status-item{
+    flex:1;
+    min-width:170px;
+    border-radius:var(--radius-md);
+    padding:16px 18px;
+    animation:fadeSlideUp 0.45s ease both;
+    animation-delay:calc(0.62s + var(--i, 0) * 60ms);
+  }
+  .status-label{
+    display:block;
+    font-size:11.5px;
+    color:var(--text-muted);
+    font-weight:600;
+    margin-bottom:7px;
+  }
+  .status-value{
+    font-family:var(--font-display);
+    font-size:16.5px;
+    font-weight:600;
+  }
+
+  /* ===== Cards Grid ===== */
+  .section-heading{
+    font-family:var(--font-display);
+    font-size:16px;
+    font-weight:600;
+    color:var(--text-primary);
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    animation:fadeSlideUp 0.45s ease both;
+    animation-delay:0.75s;
+  }
+  .section-heading .rule{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, var(--glass-border), transparent);
+  }
+
+  .cards-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:18px;
+  }
+
+  .audit-card{
+    border-radius:var(--radius-lg);
+    padding:24px;
+    position:relative;
+    transition:transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    --card-accent:var(--accent-teal);
+    animation:fadeSlideUp 0.5s ease both;
+    animation-delay:calc(0.8s + var(--i, 0) * 70ms);
+  }
+  .audit-card:hover{
+    transform:translateY(-5px);
+    border-color:var(--glass-border-strong);
+    background:var(--glass-surface-strong);
+    box-shadow:0 16px 40px -18px color-mix(in srgb, var(--card-accent) 55%, transparent);
+  }
+  .audit-card:active{transform:translateY(-2px) scale(0.99);}
+  .audit-card.outbound{--card-accent:var(--mod-outbound);}
+  .audit-card.inventory{--card-accent:var(--mod-inventory);}
+  .audit-card.inbound{--card-accent:var(--mod-inbound);}
+  .audit-card.afs{--card-accent:var(--mod-afs);}
+  .audit-card.fresh{--card-accent:var(--mod-fresh);}
+  .audit-card.rtv{--card-accent:var(--mod-rtv);}
+
+  .card-badge{
+    position:absolute;
+    top:22px; right:22px;
+    font-size:10.5px;
+    font-weight:600;
+    color:var(--card-accent);
+    background:color-mix(in srgb, var(--card-accent) 16%, transparent);
+    border:1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
+    padding:4px 10px 4px 8px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+  }
+  .card-badge::before{
+    content:'';
+    width:5px; height:5px;
+    border-radius:50%;
+    background:var(--card-accent);
+    box-shadow:0 0 6px var(--card-accent);
+    animation:softPulse 1.8s ease-in-out infinite;
+  }
+
+  .card-icon{
+    width:46px; height:46px;
+    border-radius:var(--radius-sm);
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px;
+    color:var(--card-accent);
+    background:color-mix(in srgb, var(--card-accent) 14%, transparent);
+    border:1px solid color-mix(in srgb, var(--card-accent) 28%, transparent);
+    margin-bottom:18px;
+    transition:transform 0.25s ease, background 0.25s ease;
+  }
+  .card-icon svg{width:23px; height:23px;}
+  .audit-card:hover .card-icon{
+    transform:scale(1.1) rotate(-4deg);
+    background:color-mix(in srgb, var(--card-accent) 22%, transparent);
+  }
+
+  .audit-card h3{
+    font-family:var(--font-display);
+    font-size:17px;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .audit-card p{
+    font-size:13.5px;
+    color:var(--text-secondary);
+    line-height:1.55;
+    margin-bottom:20px;
+    min-height:64px;
+  }
+
+  .open-btn{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--glass-border);
+    color:var(--text-primary);
+    padding:11px 16px;
+    border-radius:var(--radius-sm);
+    font-size:13.5px;
+    font-weight:600;
+    transition:background 0.15s ease, border-color 0.15s ease;
+  }
+  .open-btn:hover{
+    background:color-mix(in srgb, var(--card-accent) 16%, transparent);
+    border-color:color-mix(in srgb, var(--card-accent) 40%, transparent);
+  }
+  .open-btn i{color:var(--card-accent); font-size:12px;}
+
+  /* ===== Responsive ===== */
+  @media (max-width: 900px){
+    .app-container{grid-template-columns:1fr;}
+    .sidebar{
+      position:fixed;
+      left:0; top:0;
+      width:272px;
+      transform:translateX(-100%);
+      transition:transform 0.25s ease;
+    }
+    .sidebar.open{transform:translateX(0);}
+    .menu-btn{display:flex;}
+    .main-content{padding:20px 18px 50px;}
+    .ops-hero{flex-direction:column; align-items:flex-start;}
+    .ops-clock{font-size:36px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important; scroll-behavior:auto !important;}
+  }
+</style>
 </head>
 <body>
 
-    <!-- Sidebar Overlay for Mobile/Tablet Screens -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <div class="app-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <i class="fa-solid fa-boxes-stacked logo-icon"></i>
-                <div class="logo-text">
-                    <h2>Audit Center</h2>
-                    <span>Enterprise Portal</span>
-                </div>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-item active" data-target="dashboard">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span>Dashboard</span>
-                </a>
-                <div class="nav-divider">ACTIVE AUDITS</div>
-                <a href="#" class="nav-item" onclick="openAuditTool('outbound'); return false;">
-                    <i class="fa-solid fa-truck-ramp-box"></i>
-                    <span>Outbound Audit</span>
-                </a>
-                <a href="#" class="nav-item" onclick="openAuditTool('inventory'); return false;">
-                    <i class="fa-solid fa-clipboard-check"></i>
-                    <span>Inventory Audit</span>
-                </a>
-                <a href="#" class="nav-item" onclick="openAuditTool('inbound'); return false;">
-                    <i class="fa-solid fa-truck-side"></i>
-                    <span>Inbound Audit</span>
-                </a>
-                <a href="#" class="nav-item" onclick="openAuditTool('afs'); return false;">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span>AFS Audit</span>
-                </a>
-                <a href="#" class="nav-item" onclick="openAuditTool('freshPutaway'); return false;">
-                    <i class="fa-solid fa-apple-whole"></i>
-                    <span>Fresh Putaway</span>
-                </a>
-                <a href="#" class="nav-item" onclick="openAuditTool('rtv'); return false;">
-                    <i class="fa-solid fa-rotate-left"></i>
-                    <span>RTV Audit</span>
-                </a>
-                
-                <div class="nav-divider">FUTURE MODULES</div>
-                <a href="#" class="nav-item disabled" title="Coming Soon">
-                    <i class="fa-solid fa-robot"></i>
-                    <span>AI Audit Assistant</span>
-                </a>
-                <a href="#" class="nav-item disabled" title="Coming Soon">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <span>NC & CAPA Tracker</span>
-                </a>
-
-                <div class="nav-divider">SYSTEM</div>
-                <a href="#" class="nav-item" id="themeToggle">
-                    <i class="fa-solid fa-moon"></i>
-                    <span id="themeLabel">Dark Mode</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <i class="fa-solid fa-warehouse"></i>
-                <div class="footer-info">
-                    <span class="wh-title">FC Operations</span>
-                    <span class="wh-status">● System Online</span>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <!-- Header Bar -->
-            <header class="top-header">
-                <button class="menu-btn" id="menuToggle" aria-label="Toggle Menu">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <div class="header-titles">
-                    <h1>Warehouse Audit & Quality Management</h1>
-                    <p>Select an operational module to initiate an audit session.</p>
-                </div>
-                <div class="header-actions">
-                    <button class="pwa-install-btn hidden" id="installBtn">
-                        <i class="fa-solid fa-download"></i> Install App
-                    </button>
-                </div>
-            </header>
-
-            <!-- Dashboard Content -->
-            <section class="dashboard-section">
-                <!-- Status Banner -->
-                <div class="status-banner">
-                    <div class="status-item">
-                        <span class="status-label">Active Modules</span>
-                        <span class="status-value">6 Tools Ready</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Environment</span>
-                        <span class="status-value">Secure Apps Script</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Target Devices</span>
-                        <span class="status-value">Tablet / Windows</span>
-                    </div>
-                </div>
-
-                <!-- 6 Core Audit Cards Grid -->
-                <div class="cards-grid">
-                    
-                    <!-- 1. Outbound Audit -->
-                    <div class="audit-card">
-                        <div class="card-badge">Operational</div>
-                        <div class="card-icon outbound-theme">
-                            <i class="fa-solid fa-truck-ramp-box"></i>
-                        </div>
-                        <h3>Outbound Audit</h3>
-                        <p>Inspect outgoing shipments, pallet conditions, manifest compliance, and loading accuracy.</p>
-                        <button class="open-btn" onclick="openAuditTool('outbound')">
-                            <span>Launch Tool</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-
-                    <!-- 2. Inventory Audit -->
-                    <div class="audit-card">
-                        <div class="card-badge">Operational</div>
-                        <div class="card-icon inventory-theme">
-                            <i class="fa-solid fa-clipboard-check"></i>
-                        </div>
-                        <h3>Inventory Audit</h3>
-                        <p>Verify bin accuracy, cycle counts, stock discrepancies, and location integrity.</p>
-                        <button class="open-btn" onclick="openAuditTool('inventory')">
-                            <span>Launch Tool</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-
-                    <!-- 3. Inbound Audit -->
-                    <div class="audit-card">
-                        <div class="card-badge">Operational</div>
-                        <div class="card-icon fives-theme">
-                            <i class="fa-solid fa-truck-side"></i>
-                        </div>
-                        <h3>Inbound Audit</h3>
-                        <p>Inspect incoming shipments, supplier PO compliance, receiving accuracy, and dock processes.</p>
-                        <button class="open-btn" onclick="openAuditTool('inbound')">
-                            <span>Launch Tool</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-
-                    <!-- 4. AFS Audit -->
-                    <div class="audit-card">
-                        <div class="card-badge">Operational</div>
-                        <div class="card-icon afs-theme">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <h3>AFS Audit</h3>
-                        <p>Advanced Fulfillment & Safety checks, hazard reporting, and operational compliance.</p>
-                        <button class="open-btn" onclick="openAuditTool('afs')">
-                            <span>Launch Tool</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-
-                    <!-- 5. Fresh Putaway Audit -->
-                    <div class="audit-card">
-                        <div class="card-badge">Operational</div>
-                        <div class="card-icon fresh-theme">
-                            <i class="fa-solid fa-apple-whole"></i>
-                        </div>
-                        <h3>Fresh Putaway Audit</h3>
-                        <p>Monitor temperature standards, cold chain compliance, and fresh goods placement.</p>
-                        <button class="open-btn" onclick="openAuditTool('freshPutaway')">
-                            <span>Launch Tool</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-
-                    <!-- 6. RTV Audit -->
-                    <div class="audit-card">
-                        <div class="card-badge">Operational</div>
-                        <div class="card-icon outbound-theme">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </div>
-                        <h3>RTV Audit</h3>
-                        <p>Verify Return To Vendor processing, vendor compliance, damaged stock, and paperwork.</p>
-                        <button class="open-btn" onclick="openAuditTool('rtv')">
-                            <span>Launch Tool</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </button>
-                    </div>
-
-                </div>
-            </section>
-        </main>
+<div class="app-container">
+  <aside class="sidebar glass" id="sidebar">
+    <div class="sidebar-header">
+      <div class="noon-mark">
+        <svg viewBox="0 0 42 42" fill="none">
+          <g class="dial-ring">
+            <circle cx="21" cy="21" r="19" stroke="#3FD8C2" stroke-width="1.4" opacity="0.35" stroke-dasharray="3 5"/>
+            <path d="M21 4 L21 9" stroke="#F2A65A" stroke-width="2" stroke-linecap="round"/>
+          </g>
+          <circle cx="21" cy="21" r="8.5" fill="none" stroke="#3FD8C2" stroke-width="2"/>
+          <circle cx="21" cy="21" r="2.4" fill="#F2A65A"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="word">No<span class="o">o</span>N</span>
+        <span class="tag">Audit &amp; Quality Portal</span>
+      </div>
     </div>
 
-    <script src="app.js"></script>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-target="dashboard" style="--i:0">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Dashboard</span>
+      </a>
+      <div class="nav-divider">Active audits</div>
+      <a href="#" class="nav-item" onclick="openAuditTool('outbound'); return false;" style="--i:1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 L11 8.5 L11 18 L3 18 Z"/><path d="M3 8.5 L7 5 L11 8.5"/><path d="M14 15h3M16 12h4M17 9h2"/></svg>
+        <span>Outbound audit</span>
+      </a>
+      <a href="#" class="nav-item" onclick="openAuditTool('inventory'); return false;" style="--i:2">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="1.4"/><path d="M3.5 9.5h17M9 4v16"/><path d="M12 13.5l1.8 1.8L17 12"/></svg>
+        <span>Inventory audit</span>
+      </a>
+      <a href="#" class="nav-item" onclick="openAuditTool('inbound'); return false;" style="--i:3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13 L20.5 13 L20.5 20 L3.5 20 Z"/><path d="M12 3v8M8.5 8l3.5 3.5L15.5 8"/></svg>
+        <span>Inbound audit</span>
+      </a>
+      <a href="#" class="nav-item" onclick="openAuditTool('afs'); return false;" style="--i:4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.8-3 8-7 9-4-1-7-4.2-7-9V6l7-3Z"/><path d="M9 12l2.2 2.2L15.5 9.5"/></svg>
+        <span>AFS audit</span>
+      </a>
+      <a href="#" class="nav-item" onclick="openAuditTool('freshPutaway'); return false;" style="--i:5">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M12 3l-2.4 2M12 3l2.4 2M12 21l-2.4-2M12 21l2.4-2"/><path d="M4 8l16 8M4 8l2.6.4M4 8l1-2.4M20 16l-2.6-.4M20 16l-1 2.4"/><path d="M20 8L4 16M20 8l-2.6-.4M20 8l-1-2.4M4 16l2.6.4M4 16l1 2.4"/></svg>
+        <span>Fresh putaway</span>
+      </a>
+      <a href="#" class="nav-item" onclick="openAuditTool('rtv'); return false;" style="--i:6">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 1 1 2.1 5"/><path d="M4 15.5V19h3.5"/><rect x="13" y="9" width="6" height="6" rx="1"/></svg>
+        <span>RTV audit</span>
+      </a>
+
+      <div class="nav-divider">Future modules</div>
+      <a href="#" class="nav-item disabled" title="Coming soon" style="--i:7">
+        <i class="fa-solid fa-robot"></i>
+        <span>AI audit assistant</span>
+      </a>
+      <a href="#" class="nav-item disabled" title="Coming soon" style="--i:8">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>NC &amp; CAPA tracker</span>
+      </a>
+
+      <div class="nav-divider">System</div>
+      <a href="#" class="nav-item" id="themeToggle" style="--i:9">
+        <i class="fa-solid fa-sun"></i>
+        <span id="themeLabel">Light mode</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <i class="fa-solid fa-warehouse"></i>
+      <div class="footer-info">
+        <span class="wh-title">FC Operations</span>
+        <span class="wh-status">System online</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-header">
+      <button class="menu-btn" id="menuToggle" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="header-titles">
+        <h1>Warehouse Audit &amp; Quality Management</h1>
+        <p>Select an operational module to start an audit session.</p>
+      </div>
+      <div class="header-actions">
+        <button class="pwa-install-btn hidden" id="installBtn">
+          <i class="fa-solid fa-download"></i> Install app
+        </button>
+      </div>
+    </header>
+
+    <section class="ops-hero glass">
+      <div class="ops-clock-block">
+        <div class="ops-clock-label">Facility local time</div>
+        <div class="ops-clock" id="liveClock">--:--:-- <span class="ampm" id="liveAmPm">--</span></div>
+        <div class="ops-date" id="liveDate">Loading…</div>
+      </div>
+      <div class="ops-shift-block">
+        <div class="ops-stat">
+          <div class="label">Shift</div>
+          <div class="value teal" id="shiftLabel">—</div>
+        </div>
+        <div class="ops-stat">
+          <div class="label">Modules ready</div>
+          <div class="value">6 / 6</div>
+        </div>
+        <div class="ops-stat">
+          <div class="label">Open flags</div>
+          <div class="value amber">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="status-banner">
+        <div class="status-item glass" style="--i:0">
+          <span class="status-label">Environment</span>
+          <span class="status-value">Secure Apps Script</span>
+        </div>
+        <div class="status-item glass" style="--i:1">
+          <span class="status-label">Target devices</span>
+          <span class="status-value">Tablet / Windows</span>
+        </div>
+        <div class="status-item glass" style="--i:2">
+          <span class="status-label">Sync status</span>
+          <span class="status-value">Up to date</span>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        Audit modules
+        <span class="rule"></span>
+      </div>
+
+      <div class="cards-grid">
+
+        <div class="audit-card glass outbound" style="--i:0">
+          <div class="card-badge">Operational</div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 L11 8.5 L11 18 L3 18 Z"/><path d="M3 8.5 L7 5 L11 8.5"/><path d="M14 15h3M16 12h4M17 9h2"/></svg></div>
+          <h3>Outbound audit</h3>
+          <p>Inspect outgoing shipments, pallet conditions, manifest compliance, and loading accuracy.</p>
+          <button class="open-btn" onclick="openAuditTool('outbound')">
+            <span>Launch tool</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </div>
+
+        <div class="audit-card glass inventory" style="--i:1">
+          <div class="card-badge">Operational</div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="1.4"/><path d="M3.5 9.5h17M9 4v16"/><path d="M12 13.5l1.8 1.8L17 12"/></svg></div>
+          <h3>Inventory audit</h3>
+          <p>Verify bin accuracy, cycle counts, stock discrepancies, and location integrity.</p>
+          <button class="open-btn" onclick="openAuditTool('inventory')">
+            <span>Launch tool</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </div>
+
+        <div class="audit-card glass inbound" style="--i:2">
+          <div class="card-badge">Operational</div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13 L20.5 13 L20.5 20 L3.5 20 Z"/><path d="M12 3v8M8.5 8l3.5 3.5L15.5 8"/></svg></div>
+          <h3>Inbound audit</h3>
+          <p>Inspect incoming shipments, supplier PO compliance, receiving accuracy, and dock processes.</p>
+          <button class="open-btn" onclick="openAuditTool('inbound')">
+            <span>Launch tool</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </div>
+
+        <div class="audit-card glass afs" style="--i:3">
+          <div class="card-badge">Operational</div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.8-3 8-7 9-4-1-7-4.2-7-9V6l7-3Z"/><path d="M9 12l2.2 2.2L15.5 9.5"/></svg></div>
+          <h3>AFS audit</h3>
+          <p>Advanced fulfillment and safety checks, hazard reporting, and operational compliance.</p>
+          <button class="open-btn" onclick="openAuditTool('afs')">
+            <span>Launch tool</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </div>
+
+        <div class="audit-card glass fresh" style="--i:4">
+          <div class="card-badge">Operational</div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M12 3l-2.4 2M12 3l2.4 2M12 21l-2.4-2M12 21l2.4-2"/><path d="M4 8l16 8M4 8l2.6.4M4 8l1-2.4M20 16l-2.6-.4M20 16l-1 2.4"/><path d="M20 8L4 16M20 8l-2.6-.4M20 8l-1-2.4M4 16l2.6.4M4 16l1 2.4"/></svg></div>
+          <h3>Fresh putaway audit</h3>
+          <p>Monitor temperature standards, cold chain compliance, and fresh goods placement.</p>
+          <button class="open-btn" onclick="openAuditTool('freshPutaway')">
+            <span>Launch tool</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </div>
+
+        <div class="audit-card glass rtv" style="--i:5">
+          <div class="card-badge">Operational</div>
+          <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12a7 7 0 1 1 2.1 5"/><path d="M4 15.5V19h3.5"/><rect x="13" y="9" width="6" height="6" rx="1"/></svg></div>
+          <h3>RTV audit</h3>
+          <p>Verify return-to-vendor processing, vendor compliance, damaged stock, and paperwork.</p>
+          <button class="open-btn" onclick="openAuditTool('rtv')">
+            <span>Launch tool</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </button>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // ---- Mobile sidebar toggle ----
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const menuToggle = document.getElementById('menuToggle');
+
+  function toggleSidebar(){
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+  menuToggle?.addEventListener('click', toggleSidebar);
+  overlay?.addEventListener('click', toggleSidebar);
+
+  // ---- Theme toggle (light / dark) ----
+  const themeToggle = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('themeLabel');
+  const themeIcon = themeToggle?.querySelector('i');
+
+  function applyTheme(mode){
+    document.documentElement.dataset.theme = mode;
+    document.body.style.filter = mode === 'light' ? 'invert(1) hue-rotate(180deg)' : 'none';
+    if(themeLabel) themeLabel.textContent = mode === 'light' ? 'Dark mode' : 'Light mode';
+    if(themeIcon) themeIcon.className = mode === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+  }
+  let currentTheme = 'dark';
+  themeToggle?.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(currentTheme);
+  });
+
+  // ---- Live NooN clock ----
+  const clockEl = document.getElementById('liveClock');
+  const ampmEl = document.getElementById('liveAmPm');
+  const dateEl = document.getElementById('liveDate');
+  const shiftEl = document.getElementById('shiftLabel');
+
+  function pad(n){ return n.toString().padStart(2, '0'); }
+
+  function shiftForHour(h){
+    if(h >= 6 && h < 14) return 'Morning';
+    if(h >= 14 && h < 22) return 'Afternoon';
+    return 'Night';
+  }
+
+  function tick(){
+    const now = new Date();
+    let h = now.getHours();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    clockEl.childNodes[0].textContent = `${pad(h12)}:${pad(now.getMinutes())}:${pad(now.getSeconds())} `;
+    ampmEl.textContent = ampm;
+    dateEl.textContent = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    shiftEl.textContent = shiftForHour(h);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ---- Audit tool launcher (wire to your Apps Script URLs) ----
+  const AUDIT_URLS = {
+    outbound: '#',
+    inventory: '#',
+    inbound: '#',
+    afs: '#',
+    freshPutaway: '#',
+    rtv: '#'
+  };
+
+  function openAuditTool(key){
+    const url = AUDIT_URLS[key];
+    if(!url || url === '#'){
+      console.warn(`No URL configured yet for "${key}" audit module.`);
+      return;
+    }
+    window.open(url, '_blank', 'noopener');
+  }
+
+  // ---- Tap feedback ripple on launch buttons ----
+  document.querySelectorAll('.open-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const ripple = document.createElement('span');
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.cssText = `
+        position:absolute; left:${e.clientX - rect.left - size/2}px; top:${e.clientY - rect.top - size/2}px;
+        width:${size}px; height:${size}px; border-radius:50%;
+        background:rgba(255,255,255,0.18); pointer-events:none;
+        transform:scale(0); animation:rippleOut 0.5s ease-out forwards;
+      `;
+      btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    });
+  });
+
+  // ---- PWA install prompt ----
+  let deferredPrompt;
+  const installBtn = document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn?.classList.remove('hidden');
+  });
+  installBtn?.addEventListener('click', async () => {
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.classList.add('hidden');
+  });
+</script>
 </body>
 </html>
