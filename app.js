@@ -6,11 +6,12 @@
 // 1. TOOL URL CONFIGURATION (PASTE URLS HERE)
 // ==========================================
 const TOOLS = {
-    outbound: "PASTE_OUTBOUND_URL_HERE",
-    inventory: "PASTE_INVENTORY_URL_HERE",
-    fiveS: "PASTE_5S_URL_HERE",
-    afs: "PASTE_AFS_URL_HERE",
-    freshPutaway: "PASTE_FRESH_PUTAWAY_URL_HERE"
+    outbound: "https://script.google.com/a/macros/noon.com/s/AKfycbybGMLrVEh4EDhH-Tu_EY167YJdH4Lf_L03f4bcy5369fBKOmdCawrGE2fwmSUTUnfq/exec",
+    inventory: "https://script.google.com/a/macros/noon.com/s/AKfycbylIvK7yshYobzSVNg8TUxM-bgctxvahdpOnncdn3lxofiDJYqu38MLj6qSzEV3H_7p/exec",
+    inbound: "https://script.google.com/a/macros/noon.com/s/AKfycbxxGwiup_tedECpYTTPSmDi0jPnf7EqNdj_G6qKAX_3OQiPBj1olET39nf1dVMtbpi8/exec",
+    afs: "https://script.google.com/a/macros/noon.com/s/AKfycbzlSshiWjTcu6kZB8_msvMMQ6cV7basQx5ws5UxRSRmt4vTwZm4Fk9HNm0d-lW7A37O/exec",
+    freshPutaway: "https://script.google.com/a/macros/noon.com/s/AKfycbzUAueV3bukblVyEYCCv6IUVZZbzMoXhyqlXbmSnpl7aQJPUbwVH2P7deMJAxsmt5LBGA/exec",
+    rtv: "https://script.google.com/a/macros/noon.com/s/AKfycbxdABMozqhkCmjls187IbXiutwdAaaL73kKF0kmlkxUzuBDJB30c9mlwBJu4CCeDmvz/exec"
 };
 
 // ==========================================
