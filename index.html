@@ -43,9 +43,9 @@
                     <i class="fa-solid fa-clipboard-check"></i>
                     <span>Inventory Audit</span>
                 </a>
-                <a href="#" class="nav-item" onclick="openAuditTool('fiveS'); return false;">
-                    <i class="fa-solid fa-broom"></i>
-                    <span>5S Audit</span>
+                <a href="#" class="nav-item" onclick="openAuditTool('inbound'); return false;">
+                    <i class="fa-solid fa-truck-side"></i>
+                    <span>Inbound Audit</span>
                 </a>
                 <a href="#" class="nav-item" onclick="openAuditTool('afs'); return false;">
                     <i class="fa-solid fa-shield-halved"></i>
@@ -54,6 +54,10 @@
                 <a href="#" class="nav-item" onclick="openAuditTool('freshPutaway'); return false;">
                     <i class="fa-solid fa-apple-whole"></i>
                     <span>Fresh Putaway</span>
+                </a>
+                <a href="#" class="nav-item" onclick="openAuditTool('rtv'); return false;">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span>RTV Audit</span>
                 </a>
                 
                 <div class="nav-divider">FUTURE MODULES</div>
@@ -106,7 +110,7 @@
                 <div class="status-banner">
                     <div class="status-item">
                         <span class="status-label">Active Modules</span>
-                        <span class="status-value">5 Tools Ready</span>
+                        <span class="status-value">6 Tools Ready</span>
                     </div>
                     <div class="status-item">
                         <span class="status-label">Environment</span>
@@ -118,7 +122,7 @@
                     </div>
                 </div>
 
-                <!-- 5 Core Audit Cards Grid -->
+                <!-- 6 Core Audit Cards Grid -->
                 <div class="cards-grid">
                     
                     <!-- 1. Outbound Audit -->
@@ -149,15 +153,15 @@
                         </button>
                     </div>
 
-                    <!-- 3. 5S Audit -->
+                    <!-- 3. Inbound Audit -->
                     <div class="audit-card">
                         <div class="card-badge">Operational</div>
                         <div class="card-icon fives-theme">
-                            <i class="fa-solid fa-broom"></i>
+                            <i class="fa-solid fa-truck-side"></i>
                         </div>
-                        <h3>5S Audit</h3>
-                        <p>Evaluate Sort, Set in Order, Shine, Standardize, and Sustain compliance across zones.</p>
-                        <button class="open-btn" onclick="openAuditTool('fiveS')">
+                        <h3>Inbound Audit</h3>
+                        <p>Inspect incoming shipments, supplier PO compliance, receiving accuracy, and dock processes.</p>
+                        <button class="open-btn" onclick="openAuditTool('inbound')">
                             <span>Launch Tool</span>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </button>
@@ -186,6 +190,20 @@
                         <h3>Fresh Putaway Audit</h3>
                         <p>Monitor temperature standards, cold chain compliance, and fresh goods placement.</p>
                         <button class="open-btn" onclick="openAuditTool('freshPutaway')">
+                            <span>Launch Tool</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+
+                    <!-- 6. RTV Audit -->
+                    <div class="audit-card">
+                        <div class="card-badge">Operational</div>
+                        <div class="card-icon outbound-theme">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <h3>RTV Audit</h3>
+                        <p>Verify Return To Vendor processing, vendor compliance, damaged stock, and paperwork.</p>
+                        <button class="open-btn" onclick="openAuditTool('rtv')">
                             <span>Launch Tool</span>
                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
                         </button>
