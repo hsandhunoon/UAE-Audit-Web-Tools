@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="Enterprise Warehouse Audit & Quality Management Portal">
+    <title>Audit Center</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome CDN for Professional Enterprise Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sidebar Overlay for Mobile/Tablet Screens -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-boxes-stacked logo-icon"></i>
+                <div class="logo-text">
+                    <h2>Audit Center</h2>
+                    <span>Enterprise Portal</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="dashboard">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <div class="nav-divider">ACTIVE AUDITS</div>
+                <a href="#" class="nav-item" onclick="openAuditTool('outbound'); return false;">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                    <span>Outbound Audit</span>
+                </a>
+                <a href="#" class="nav-item" onclick="openAuditTool('inventory'); return false;">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span>Inventory Audit</span>
+                </a>
+                <a href="#" class="nav-item" onclick="openAuditTool('fiveS'); return false;">
+                    <i class="fa-solid fa-broom"></i>
+                    <span>5S Audit</span>
+                </a>
+                <a href="#" class="nav-item" onclick="openAuditTool('afs'); return false;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>AFS Audit</span>
+                </a>
+                <a href="#" class="nav-item" onclick="openAuditTool('freshPutaway'); return false;">
+                    <i class="fa-solid fa-apple-whole"></i>
+                    <span>Fresh Putaway</span>
+                </a>
+                
+                <div class="nav-divider">FUTURE MODULES</div>
+                <a href="#" class="nav-item disabled" title="Coming Soon">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>AI Audit Assistant</span>
+                </a>
+                <a href="#" class="nav-item disabled" title="Coming Soon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>NC & CAPA Tracker</span>
+                </a>
+
+                <div class="nav-divider">SYSTEM</div>
+                <a href="#" class="nav-item" id="themeToggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span id="themeLabel">Dark Mode</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <i class="fa-solid fa-warehouse"></i>
+                <div class="footer-info">
+                    <span class="wh-title">FC Operations</span>
+                    <span class="wh-status">● System Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <button class="menu-btn" id="menuToggle" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="header-titles">
+                    <h1>Warehouse Audit & Quality Management</h1>
+                    <p>Select an operational module to initiate an audit session.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="pwa-install-btn hidden" id="installBtn">
+                        <i class="fa-solid fa-download"></i> Install App
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <section class="dashboard-section">
+                <!-- Status Banner -->
+                <div class="status-banner">
+                    <div class="status-item">
+                        <span class="status-label">Active Modules</span>
+                        <span class="status-value">5 Tools Ready</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Environment</span>
+                        <span class="status-value">Secure Apps Script</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Target Devices</span>
+                        <span class="status-value">Tablet / Windows</span>
+                    </div>
+                </div>
+
+                <!-- 5 Core Audit Cards Grid -->
+                <div class="cards-grid">
+                    
+                    <!-- 1. Outbound Audit -->
+                    <div class="audit-card">
+                        <div class="card-badge">Operational</div>
+                        <div class="card-icon outbound-theme">
+                            <i class="fa-solid fa-truck-ramp-box"></i>
+                        </div>
+                        <h3>Outbound Audit</h3>
+                        <p>Inspect outgoing shipments, pallet conditions, manifest compliance, and loading accuracy.</p>
+                        <button class="open-btn" onclick="openAuditTool('outbound')">
+                            <span>Launch Tool</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+
+                    <!-- 2. Inventory Audit -->
+                    <div class="audit-card">
+                        <div class="card-badge">Operational</div>
+                        <div class="card-icon inventory-theme">
+                            <i class="fa-solid fa-clipboard-check"></i>
+                        </div>
+                        <h3>Inventory Audit</h3>
+                        <p>Verify bin accuracy, cycle counts, stock discrepancies, and location integrity.</p>
+                        <button class="open-btn" onclick="openAuditTool('inventory')">
+                            <span>Launch Tool</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+
+                    <!-- 3. 5S Audit -->
+                    <div class="audit-card">
+                        <div class="card-badge">Operational</div>
+                        <div class="card-icon fives-theme">
+                            <i class="fa-solid fa-broom"></i>
+                        </div>
+                        <h3>5S Audit</h3>
+                        <p>Evaluate Sort, Set in Order, Shine, Standardize, and Sustain compliance across zones.</p>
+                        <button class="open-btn" onclick="openAuditTool('fiveS')">
+                            <span>Launch Tool</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+
+                    <!-- 4. AFS Audit -->
+                    <div class="audit-card">
+                        <div class="card-badge">Operational</div>
+                        <div class="card-icon afs-theme">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3>AFS Audit</h3>
+                        <p>Advanced Fulfillment & Safety checks, hazard reporting, and operational compliance.</p>
+                        <button class="open-btn" onclick="openAuditTool('afs')">
+                            <span>Launch Tool</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+
+                    <!-- 5. Fresh Putaway Audit -->
+                    <div class="audit-card">
+                        <div class="card-badge">Operational</div>
+                        <div class="card-icon fresh-theme">
+                            <i class="fa-solid fa-apple-whole"></i>
+                        </div>
+                        <h3>Fresh Putaway Audit</h3>
+                        <p>Monitor temperature standards, cold chain compliance, and fresh goods placement.</p>
+                        <button class="open-btn" onclick="openAuditTool('freshPutaway')">
+                            <span>Launch Tool</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
